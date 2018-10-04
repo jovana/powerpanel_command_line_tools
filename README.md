@@ -13,3 +13,5 @@ Python PowerPanel Command line tool
 - Run the app using: ```/usr/local/bin/python3 start.py```
 
 
+
+![PowerPanel commandline tool](https://github.com/jovana/powerpanel_command_line_tools/blob/master/commandline.png)

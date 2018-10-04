@@ -116,7 +116,6 @@ while selection:
             print('Task done, returning to the menu...') 
 
     elif selection == '3':
-        #print(colors.bcolors.FAIL + 'Sorry not implementend jet, still working on.' +  response_json['msg'][0] + colors.bcolors.ENDC)
         # Running create DNS zone for the domains in file domain_list.txt
 
         # clear screen 

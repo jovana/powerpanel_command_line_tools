@@ -30,7 +30,7 @@ while selection:
         ---- PowerPanel API tool ----
         -----------------------------
 
-        Make a choose of one of the following options:
+        Make a choice of one of the following options:
         
         1. Domain info (Sync domain information from the registry)
         2. Change domain name servers (Change the name server settings for your domains)
@@ -116,8 +116,32 @@ while selection:
             print('Task done, returning to the menu...') 
 
     elif selection == '3':
-        print(colors.bcolors.FAIL + 'Sorry not implementend jet, still working on.' +  response_json['msg'][0] + colors.bcolors.ENDC)
+        #print(colors.bcolors.FAIL + 'Sorry not implementend jet, still working on.' +  response_json['msg'][0] + colors.bcolors.ENDC)
+        # Running create DNS zone for the domains in file domain_list.txt
+
+        # clear screen 
+        os.system( 'clear' ) 
+
+        if oPowerPanel.loadListFromDisk("domain_list.txt"):
+            for domain in oPowerPanel.file_contents:                       
+                print('Create DNS zone for domain: ' +domain)
+                data = {}
+                data["domainname"] = domain
+                
+                # Set API command
+                response = oPowerPanel.apiCommand("Dns/createZone", json.dumps(data))
+                response_json = json.loads(response.content.decode('UTF-8'))
+
+                # print status from action
+                if response_json['code'] == 1:
+                    print(colors.bcolors.OKGREEN + 'Status: SUCCESS!\n' + response_json['msg'][0] + colors.bcolors.ENDC)
+                else:
+                    print(colors.bcolors.FAIL + 'Status: FAIL: ' +  response_json['msg'][0] + colors.bcolors.ENDC)
+                print('========================================')
+            print('Task done, returning to the menu...') 
+
     elif selection == '4': 
+        print(colors.bcolors.OKBLUE +  "Bye Bye!!" + colors.bcolors.ENDC)
         break
     else:
         print(colors.bcolors.FAIL +  "Unknown option selected, now exits!" + colors.bcolors.ENDC)

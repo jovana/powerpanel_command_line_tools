@@ -10,4 +10,8 @@ Python PowerPanel Command line tool
 - Download and unzip this file to a folder on PC
 - Add your PowerPanel API key to the config.json file
 - Add a list of domains to the file domain_list.txt
-- Run the app using: /usr/local/bin/python3 start.py
+- Run the app using: ```/usr/local/bin/python3 start.py```
+
+
+
+![PowerPanel commandline tool](https://github.com/jovana/powerpanel_command_line_tools/blob/master/commandline.png)

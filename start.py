@@ -6,6 +6,9 @@ import os
 from collections import namedtuple
 from pathlib import Path
 
+# clear screen
+os.system( 'clear' ) 
+
 # loading config file
 config_file = Path(os.path.abspath(os.path.join(os.path.dirname(__file__), 'config.json')))
 
@@ -29,9 +32,9 @@ while selection:
 
         Make a choose of one of the following options:
         
-        1. Domain info
-        2. -- empty --
-        3. -- emtpy --
+        1. Domain info (Sync domain information from the registry)
+        2. Change domain name servers (Change the name server settings for your domains)
+        3. Create DNS zones (Enabled DNS zones for the domains)
 
         4. Exit / Quit
         """ + colors.bcolors.ENDC)
@@ -44,16 +47,16 @@ while selection:
     if selection =='1':
         # Running domain info for the domains in file domain_list.txt
 
+        # clear screen 
+        os.system( 'clear' ) 
+
         # Ask if domain expireddate needs to update
         print(colors.bcolors.WARNING + """
         Do you want to udate the domain expiredate? [Default = N]
         Y = Yes
         N = No
         """+ colors.bcolors.ENDC) 
-        update_expiredate = input("Please Select Y or N: ")
-
-        # clear screen 
-        os.system( 'clear' )  
+        update_expiredate = input("Please Select Y or N: ") 
 
         if oPowerPanel.loadListFromDisk("domain_list.txt"):
             for domain in oPowerPanel.file_contents:                       
@@ -77,12 +80,46 @@ while selection:
             print('Task done, returning to the menu...') 
 
     elif selection == '2':
-        print( "delete")
+        # Running change nameserver settings for the domains in file domain_list.txt
+
+        # clear screen 
+        os.system( 'clear' ) 
+
+        # Ask if name server ID needs for the update
+        print(colors.bcolors.WARNING + "Please enter the number of the name server set ID you want to use to update your domain.\nThis number can be found in the control panel." + colors.bcolors.ENDC) 
+        try:
+            nss_id = int(input("Please enter the number: "))
+        except ValueError:
+            nss_id = 0
+
+        if not int(nss_id) > 0:
+            print(colors.bcolors.FAIL +'Incorrect number given!' + colors.bcolors.ENDC)
+            break
+
+        if oPowerPanel.loadListFromDisk("domain_list.txt"):
+            for domain in oPowerPanel.file_contents:                       
+                print('Running domain modify for domain: ' +domain)
+                data = {}
+                data["domainname"] = domain
+                data['nameserverset_id'] = nss_id
+                
+                # Set API command
+                response = oPowerPanel.apiCommand("Domain/modify", json.dumps(data))
+                response_json = json.loads(response.content.decode('UTF-8'))
+
+                # print status from action
+                if response_json['code'] == 1:
+                    print(colors.bcolors.OKGREEN + 'Status: SUCCESS!\n' + response_json['msg'][0] + colors.bcolors.ENDC)
+                else:
+                    print(colors.bcolors.FAIL + 'Status: FAIL: ' +  response_json['msg'][0] + colors.bcolors.ENDC)
+                print('========================================')
+            print('Task done, returning to the menu...') 
+
     elif selection == '3':
-        print("find") 
+        print(colors.bcolors.FAIL + 'Sorry not implementend jet, still working on.' +  response_json['msg'][0] + colors.bcolors.ENDC)
     elif selection == '4': 
         break
     else:
-        print( "Unknown Option Selected!" )
+        print(colors.bcolors.FAIL +  "Unknown option selected, now exits!" + colors.bcolors.ENDC)
 
 
